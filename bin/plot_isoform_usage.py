@@ -16,6 +16,11 @@ try:
         outfilebase = sys.argv[4]
     else:
         outfilebase = genename
+    if len(sys.argv) > 5:
+        # CS: minimum number of cumulative reads the isoform must have to be plotted in color
+        minreads = int(sys.argv[5])
+    else:
+        minreads = 10
 except:
     sys.stderr.write('python script.py isoforms.psl|.bed counts_matrix.tsv genename [outfilenamebase]\n')
     sys.stderr.write('''The most highly expressed isoforms across all the samples will be plotted. 
@@ -172,7 +177,8 @@ panel.tick_params(axis='both',which='both', \
                    right=False, labelright=False, \
                    top=False, labeltop=False, labelsize=8)
 
-minreads = 10  # minimum number of cumulative reads the isoform must have to be plotted in color
+# minreads = 10  # minimum number of cumulative reads the isoform must have to be plotted in color
+# CS: changed to arg
 gray_bar = [['lowexpr']+[0]*len(sample_ids)+gray]  # the minor isoform bar is gray
 for line in counts_matrix:
     line = line.rstrip().split('\t')
@@ -246,8 +252,9 @@ panel.set_xticklabels(sample_ids, rotation=20, ha='right')
 panel.set_xlim(0.5, xlim)
 panel.set_ylim(0, 100)
 panel.set_ylabel('Percent Usage', fontsize=12)
-# plt.savefig(genename+'_proportion.pdf', transparent=True, dpi=600)  # uncomment to output as pdf
+plt.savefig(outfilebase+'_proportion.pdf', transparent=True, dpi=600)  # uncomment to output as pdf
 plt.savefig(outfilebase+'_usage.png', dpi=600)
+# plt.savefig('usage.png', dpi=600)
 
 # isoform structures
 fig_0 = plt.figure(figsize=(9, 3))
@@ -260,5 +267,6 @@ packed = pack(isoforms, rev=False, tosort=False)
 
 plot_blocks(packed, panel, names, l=1)
 
-# plt.savefig(genename+'_bars.pdf', transparent=True, dpi=600)  # uncomment to output as pdf
+plt.savefig(outfilebase+'_bars.pdf', transparent=True, dpi=600)  # uncomment to output as pdf
 plt.savefig(outfilebase+'_isoforms.png', dpi=600)
+# plt.savefig('isoforms.png', dpi=600)
